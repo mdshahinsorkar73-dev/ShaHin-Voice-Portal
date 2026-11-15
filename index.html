@@ -2,6 +2,8 @@
 <html lang="bn"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Voice Portal</title>
+ <link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#050a08">
 <style>
 :root{--h:140;--c:hsl(var(--h) 100% 55%);--cd:hsl(var(--h) 100% 55% / .3);--bg:#040806;--tx:#d4ffe4;--mu:#7fa28d;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -220,4 +222,11 @@ $("#ls").onclick=async e=>{const t=e.target,i=+(t.dataset.d||t.dataset.x||t.data
  if(t.dataset.x){await tx("readwrite",s=>s.delete(i));list();return}
  try{const v=await tx("readonly",s=>s.get(i)),b=await dec(v.blob);await saveFile(b,v.name)}catch(x){st(x.code=="declined"?"ডাউনলোড বাতিল":"ডাউনলোড হয়নি")}};
 list();
+                                                                                                                                                  <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .catch(console.error);
+  });
+}
 </script></body></html>
