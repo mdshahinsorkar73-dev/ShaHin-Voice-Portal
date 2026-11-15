@@ -222,6 +222,7 @@ $("#ls").onclick=async e=>{const t=e.target,i=+(t.dataset.d||t.dataset.x||t.data
  if(t.dataset.x){await tx("readwrite",s=>s.delete(i));list();return}
  try{const v=await tx("readonly",s=>s.get(i)),b=await dec(v.blob);await saveFile(b,v.name)}catch(x){st(x.code=="declined"?"ডাউনলোড বাতিল":"ডাউনলোড হয়নি")}};
 list();
+</script>
                                                                                                                                                   <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
