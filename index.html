@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="bn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Voice Portal</title>
+<style>
+:root{--h:140;--c:hsl(var(--h) 100% 55%);--cd:hsl(var(--h) 100% 55% / .3);--bg:#040806;--tx:#d4ffe4;--mu:#7fa28d;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Courier New",ui-monospace,monospace;overflow-x:hidden}
+#rain{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.4}
+main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:14px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.logo{width:52px;height:52px;color:var(--c);flex:none;filter:drop-shadow(0 0 6px var(--c))}
+h1{margin:0;font-size:24px;color:var(--c);text-shadow:0 0 10px var(--c);letter-spacing:1px}
+.wel{margin:0 0 14px;color:var(--c);font-size:14px;border-left:3px solid var(--c);padding-left:10px}
+.card{background:rgba(4,10,7,.86);border:1px solid var(--cd);border-radius:10px;padding:12px;margin-bottom:12px;box-shadow:0 0 14px hsl(var(--h) 100% 50% / .08)}
+h2{margin:0 0 8px;font-size:15px;color:var(--c)}
+button,.btn{font:inherit;background:transparent;color:var(--c);border:1px solid var(--c);border-radius:8px;padding:9px 12px;cursor:pointer;display:inline-block;margin:0 6px 6px 0}
+button:active,.btn:active{background:var(--c);color:#000}
+button.hot{background:var(--c);color:#000;font-weight:bold}
+button:disabled{opacity:.4}
+button:focus-visible,.btn:focus-within,input:focus-visible{outline:2px solid #fff;outline-offset:2px}
+input[type=file]{position:absolute;opacity:0;width:1px;height:1px}
+input[type=text]{font:inherit;background:#000;color:var(--tx);border:1px solid var(--cd);border-radius:8px;padding:9px;width:100%}
+.row{display:grid;grid-template-columns:1fr 46px;gap:2px 8px;align-items:center;margin-bottom:6px}
+.row label{grid-column:1/3;font-size:13px;color:var(--tx)}
+.row span{text-align:right;font-size:12px;color:var(--c)}
+input[type=range]{width:100%;accent-color:var(--c)}
+.info{font-size:13px;color:var(--mu);margin:2px 0 0;word-break:break-word}
+#st{min-height:22px;font-size:13px;color:var(--c);margin:4px 0 8px}
+.chk{display:flex;gap:8px;align-items:center;margin:4px 0}
+.chk input{accent-color:var(--c);width:18px;height:18px}
+.sv{border-top:1px dashed var(--cd);padding-top:8px;margin-top:8px}
+.sv audio{width:100%;height:36px;margin:4px 0}
+a{color:var(--c)}
+.dev{margin:-8px 0 14px;padding-left:13px;font-size:12px;font-style:italic;color:var(--mu);letter-spacing:.5px}
+.dev b{color:var(--c);text-shadow:0 0 8px var(--c);font-size:14px}
+#sp{position:fixed;inset:0;z-index:9;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px}
+#sp .logo{width:96px;height:96px}
+@media (prefers-reduced-motion:reduce){#rain{display:none}}
+</style></head><body>
+<canvas id="rain"></canvas>
+<div id="sp"><svg class="logo" viewBox="0 0 64 64"><use href="#lg"/></svg><h1>VOICE PORTAL</h1><p class="info" id="ty"></p><button class="hot" id="go">ঢোকো</button></div>
+<svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 64 64"><rect x="2" y="2" width="60" height="60" rx="14" fill="#04100a" stroke="currentColor" stroke-width="3"/><path d="M13 22l12 10-12 10" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M33 40V24M40 46V18M47 40V24M54 35V29" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></symbol></svg>
+<main>
+<header><svg class="logo" viewBox="0 0 64 64"><use href="#lg"/></svg><h1>Voice Portal</h1></header>
+<p class="wel">Welcome to Shahin Voice Portal</p>
+<p class="dev">Developed by <b>“Shahin Sarkar”</b><br>Contact: <a href="https://www.facebook.com/hm.shahin.sarkar" target="_blank" rel="noopener">@hm.shahin.sarkar</a></p>
+
+<div class="card"><h2>১. ভয়েস নাও</h2>
+<button id="rec" class="hot">● রেকর্ড</button><button id="stp" disabled>■ থামাও</button>
+<label class="btn">ফোন থেকে অডিও<input type="file" id="vf" accept="audio/*,video/*"></label>
+<label class="btn">📱 ফোনের রেকর্ডার<input type="file" id="vc" accept="audio/*" capture></label>
+<p class="info" id="vi">এখনো ভয়েস নেই</p></div>
+
+<div class="card"><h2>২. ব্যাকগ্রাউন্ড মিউজিক</h2>
+<label class="btn">ফোন থেকে মিউজিক<input type="file" id="mf" accept="audio/*"></label><button id="mx">মিউজিক বাদ</button>
+<p class="info" id="mi">মিউজিক নেই</p>
+<p class="info">অন্য সাইট থেকে নিতে চাইলে আগে ফোনে ডাউনলোড করো, তারপর উপরের বাটনে সিলেক্ট করো। ফ্রি সাইট: <a href="https://pixabay.com/music/" target="_blank" rel="noopener">Pixabay</a>, <a href="https://freemusicarchive.org/" target="_blank" rel="noopener">Free Music Archive</a></p></div>
+
+<div class="card"><h2>৩. প্রিসেট ও ভয়েস চেঞ্জ</h2><div id="pr"></div></div>
+<div id="ctl"></div>
+
+<div class="card"><h2>৪. শোনো, সেভ করো, ডাউনলোড</h2>
+<div id="st"></div>
+<button id="pv" class="hot">▶ প্রিভিউ</button><button id="ps">■ বন্ধ</button>
+<input type="text" id="nm" placeholder="ভয়েসের নাম" maxlength="40" style="margin:6px 0">
+<button id="sv">সেভ করো</button><button id="dl">ডাউনলোড</button><button id="sh">ভয়েস শেয়ার</button>
+<p class="info">ডাউনলোড রিয়েল-টাইমে হয়, তাই ভয়েসের সমান সময় লাগে।</p></div>
+
+<div class="card"><h2>৫. সেভ করা ভয়েস</h2><div id="ls"><p class="info">কিছু সেভ করা নেই</p></div></div>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+let AC,voice=null,music=null,playing=null,mrec=null,tmr=null;
+const ac=()=>{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();return AC};
+const st=t=>$("#st").textContent=t;
+const fmt=b=>b.duration.toFixed(1)+" সেকেন্ড";
+
+/* ---- hacker rain + live colour ---- */
+let hue=140;setInterval(()=>{hue=(hue+1)%360;document.documentElement.style.setProperty("--h",hue)},90);
+const cv=$("#rain"),cx=cv.getContext("2d"),CH="01{}<>/;=$#()[]ABCDEF0123456789&|!?".split("");let cols=[],fs=16;
+function fit(){cv.width=innerWidth;cv.height=innerHeight;cols=Array(Math.ceil(cv.width/fs)).fill(0).map(()=>Math.random()*cv.height/fs)}
+fit();addEventListener("resize",fit);
+setInterval(()=>{cx.fillStyle="rgba(4,8,6,.12)";cx.fillRect(0,0,cv.width,cv.height);cx.fillStyle="hsl("+hue+",100%,55%)";cx.font=fs+"px monospace";
+cols.forEach((y,i)=>{cx.fillText(CH[Math.random()*CH.length|0],i*fs,y*fs);cols[i]=y*fs>cv.height&&Math.random()>.97?0:y+1})},60);
+
+/* ---- splash ---- */
+const msg="> access granted... loading voice tools_";let ti=0;
+const tt=setInterval(()=>{$("#ty").textContent=msg.slice(0,++ti);if(ti>=msg.length)clearInterval(tt)},45);
+$("#go").onclick=()=>{ac();$("#sp").remove()};
+
+/* ---- controls ---- */
+const D={pit:0,vol:100,mus:40,mas:100,spd:100,bas:0,tre:0,ecm:0,ect:250,ecf:35,rvm:0,rvs:2,dst:0,fi:0,fo:0,ts:0,te:100,fresh:0,rev:0};
+const G=[["ভলিউম",[["vol","ভয়েস ভলিউম",0,200,"%"],["mus","মিউজিক ভলিউম",0,200,"%"],["mas","মাস্টার ভলিউম",0,200,"%"]]],
+["ভয়েস চেঞ্জার (সময় একই থাকে)",[["pit","পিচ (কম = মোটা/ছেলে, বেশি = চিকন/মেয়ে)",-12,12,"st"]]],
+["স্পিড ও পিচ",[["spd","স্পিড / পিচ (কম = ভারী, বেশি = চিকন)",50,200,"%"]]],
+["ইকুয়ালাইজার",[["bas","বাস",-12,12,"dB"],["tre","ট্রেবল",-12,12,"dB"]]],
+["ইকো",[["ecm","ইকো ভলিউম",0,100,"%"],["ect","ইকো গ্যাপ",60,800,"ms"],["ecf","ইকো রিপিট",0,85,"%"]]],
+["রিভার্ব ও ডিস্টর্শন",[["rvm","রিভার্ব ভলিউম",0,100,"%"],["rvs","রিভার্ব সাইজ",1,6,"s"],["dst","ডিস্টর্শন",0,100,"%"]]],
+["ফেড ও ট্রিম",[["fi","ফেড ইন",0,5,"s"],["fo","ফেড আউট",0,5,"s"],["ts","ট্রিম শুরু",0,95,"%"],["te","ট্রিম শেষ",5,100,"%"]]]];
+$("#ctl").innerHTML=G.map(([t,r])=>`<div class="card"><h2>${t}</h2>`+r.map(([k,l,a,b,u])=>`<div class="row"><label for="${k}">${l}</label><input type="range" id="${k}" min="${a}" max="${b}" step="${k=="fi"||k=="fo"||k=="rvs"?.5:1}" value="${D[k]}"><span id="${k}v"></span></div>`).join("")+(t=="ফেড ও ট্রিম"?`<label class="chk"><input type="checkbox" id="fresh">ভয়েস ফ্রেশ (নয়েজ কমানো ও ক্লিয়ার)</label><label class="chk"><input type="checkbox" id="rev">রিভার্স (উল্টো করে বাজাও)</label>`:"")+"</div>").join("");
+const U={};G.forEach(g=>g[1].forEach(r=>U[r[0]]=r[4]));
+const upd=k=>{if($("#"+k+"v"))$("#"+k+"v").textContent=$("#"+k).value+U[k]};
+Object.keys(U).forEach(k=>{$("#"+k).oninput=()=>upd(k);upd(k)});
+function setAll(o){const v={...D,...o};Object.keys(v).forEach(k=>{const e=$("#"+k);if(!e)return;if(e.type=="checkbox")e.checked=!!v[k];else{e.value=v[k];upd(k)}})}
+const PRE={"রিসেট":{},"মেয়ে ভয়েস":{pit:5,tre:3,bas:-2},"ছেলে ভয়েস":{pit:-4,bas:3},"চিকন":{pit:8,tre:4,bas:-3},"মোটা":{pit:-8,bas:6,tre:-2},"চিপমাঙ্ক":{spd:140,bas:-4,tre:4},"ডিপ ভয়েস":{spd:78,bas:6},"রোবট":{dst:35,ecm:45,ect:60,ecf:55},"রেডিও":{bas:-10,tre:6,dst:20},"গুহা":{rvm:70,rvs:4,ecm:30,ect:400},"ফ্রেশ":{fresh:1,tre:3},"উল্টো":{rev:1,rvm:30}};
+$("#pr").innerHTML=Object.keys(PRE).map(k=>`<button data-p="${k}">${k}</button>`).join("");
+$("#pr").onclick=e=>{const p=e.target.dataset.p;if(p){setAll(PRE[p]);st("প্রিসেট: "+p)}};
+const g=k=>+$("#"+k).value;
+
+/* ---- load audio ---- */
+async function dec(file){return ac().decodeAudioData(await file.arrayBuffer())}
+$("#vf").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;st("লোড হচ্ছে...");try{voice=await dec(f);$("#vi").textContent=f.name+" · "+fmt(voice);$("#nm").value=$("#nm").value||f.name.replace(/\.[^.]+$/,"");st("ভয়েস রেডি")}catch(x){st("এই ফাইল পড়া গেল না, অন্য অডিও ফাইল দাও")}};
+$("#vc").onchange=$("#vf").onchange;
+$("#mf").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;st("মিউজিক লোড হচ্ছে...");try{music=await dec(f);$("#mi").textContent=f.name+" · "+fmt(music);st("মিউজিক রেডি")}catch(x){st("এই মিউজিক পড়া গেল না")}};
+$("#mx").onclick=()=>{music=null;$("#mi").textContent="মিউজিক নেই"};
+
+/* ---- mic ---- */
+const micFail=m=>{st(m);$("#vi").textContent=m;$("#rec").disabled=false;$("#stp").disabled=true};
+$("#rec").onclick=async()=>{
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder)return micFail("এই ব্রাউজারে মাইক রেকর্ড চলে না। পাশের 📱 ফোনের রেকর্ডার বাটন চাপো");
+ if(window.isSecureContext===false)return micFail("মাইকের জন্য লিংকটা https দিয়ে খুলতে হবে");
+ let s;
+ try{s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false}})}
+ catch(x){const n=x&&x.name;
+  if(n=="NotAllowedError"||n=="SecurityError")return micFail(window.self!==window.top?"এই এমবেডেড পেজে মাইক ব্লক থাকে। নিজের লাইভ লিংকে (GitHub/Netlify) খুলে চেষ্টা করো, অথবা 📱 ফোনের রেকর্ডার বাটন চাপো":"মাইকের অনুমতি দেওয়া হয়নি। অ্যাড্রেস বারের তালা আইকনে চেপে মাইক Allow করো, তারপর আবার চাপো");
+  if(n=="NotFoundError")return micFail("কোনো মাইক পাওয়া যায়নি");
+  if(n=="NotReadableError")return micFail("অন্য কোনো অ্যাপ মাইক ব্যবহার করছে, সেটা বন্ধ করে আবার চাপো");
+  return micFail("মাইক চালু হয়নি ("+(n||"error")+")। 📱 ফোনের রেকর্ডার বাটন চাপো")}
+ const ch=[],mt=["audio/webm;codecs=opus","audio/mp4","audio/webm"].find(t=>MediaRecorder.isTypeSupported(t));
+ try{mrec=mt?new MediaRecorder(s,{mimeType:mt}):new MediaRecorder(s)}catch(x){s.getTracks().forEach(t=>t.stop());return micFail("রেকর্ডার চালু হয়নি। 📱 ফোনের রেকর্ডার বাটন চাপো")}
+ mrec.ondataavailable=e=>e.data.size&&ch.push(e.data);
+ mrec.onstop=async()=>{s.getTracks().forEach(t=>t.stop());clearInterval(tmr);$("#rec").disabled=false;$("#stp").disabled=true;
+  if(!ch.length)return micFail("কিছু রেকর্ড হয়নি, আবার চেষ্টা করো");
+  try{voice=await dec(new Blob(ch,{type:mrec.mimeType||mt||""}));$("#vi").textContent="রেকর্ডিং · "+fmt(voice);st("রেকর্ড শেষ, ভয়েস রেডি")}catch(x){micFail("রেকর্ডিং পড়া গেল না, আবার চেষ্টা করো")}};
+ mrec.start(1000);let t=0;$("#rec").disabled=true;$("#stp").disabled=false;
+ tmr=setInterval(()=>st("● রেকর্ড হচ্ছে "+(++t)+" সে"),1000);st("● রেকর্ড হচ্ছে")};
+$("#stp").onclick=()=>mrec&&mrec.state!="inactive"&&mrec.stop();
+
+/* ---- render the mix ---- */
+function rev(b){const o=ac().createBuffer(b.numberOfChannels,b.length,b.sampleRate);for(let c=0;c<b.numberOfChannels;c++)o.getChannelData(c).set(b.getChannelData(c).slice().reverse());return o}
+function pitch(b,p){const sr=b.sampleRate,o=ac().createBuffer(b.numberOfChannels,b.length,sr),N=1536,H=N/2,S=160,w=new Float32Array(N);for(let i=0;i<N;i++)w[i]=.5-.5*Math.cos(2*Math.PI*i/N);
+ for(let c=0;c<b.numberOfChannels;c++){const x=b.getChannelData(c),n2=Math.floor(x.length/p),y=new Float32Array(n2+N*2+S*2),out=o.getChannelData(c);
+  for(let i=0;i<n2;i++){const q=i*p,i0=q|0,f=q-i0;y[i]=x[i0]*(1-f)+(x[i0+1]||0)*f}
+  let prev=0;for(let k=0;k*H<x.length;k++){const t=k*H,ip=Math.round(t/p);let best=ip;
+   if(k>0){let bc=-1e18;const tg=prev+H;for(let d=-S;d<=S;d+=2){const q=ip+d;if(q<0)continue;let s=0;for(let i=0;i<H;i+=4)s+=y[q+i]*y[tg+i];if(s>bc){bc=s;best=q}}}
+   prev=best;for(let i=0;i<N&&t+i<out.length;i++)out[t+i]+=w[i]*y[best+i]}}
+ return o}
+async function render(){
+ if(!voice)throw new Error("আগে ভয়েস রেকর্ড করো বা ফাইল দাও");
+ const sr=44100,b0=$("#rev").checked?rev(voice):voice,b=g("pit")?pitch(b0,Math.pow(2,g("pit")/12)):b0,r=g("spd")/100,off=b.duration*g("ts")/100,dur=Math.max(.1,b.duration*Math.max(g("te"),g("ts")+1)/100-off);
+ const tail=(g("ecm")>0||g("rvm")>0)?2.5:.3,len=Math.ceil((dur/r+tail)*sr),tot=len/sr;
+ const o=new OfflineAudioContext(2,len,sr),mk=(t,f,gn,q)=>{const x=o.createBiquadFilter();x.type=t;x.frequency.value=f;if(gn!=null)x.gain.value=gn;if(q)x.Q.value=q;return x};
+ const s=o.createBufferSource();s.buffer=b;s.playbackRate.value=r;let n=s;const ch=x=>{n.connect(x);n=x};
+ const fr=$("#fresh").checked;ch(mk("highpass",fr?120:20));
+ if(fr){ch(mk("lowpass",11000));ch(mk("peaking",3200,4,1));const c=o.createDynamicsCompressor();c.threshold.value=-30;c.ratio.value=4;ch(c)}
+ ch(mk("lowshelf",200,g("bas")));ch(mk("highshelf",3500,g("tre")));
+ if(g("dst")>0){const w=o.createWaveShaper(),k=g("dst")*2,cu=new Float32Array(1024);for(let i=0;i<1024;i++){const x=i*2/1024-1;cu[i]=(3+k)*x*20*(Math.PI/180)/(Math.PI+k*Math.abs(x))}w.curve=cu;ch(w)}
+ const vg=o.createGain();vg.gain.value=g("vol")/100;ch(vg);
+ const ms=o.createGain(),lim=o.createDynamicsCompressor();ms.connect(lim);lim.connect(o.destination);
+ n.connect(ms);
+ if(g("ecm")>0){const d=o.createDelay(1),f=o.createGain(),e=o.createGain();d.delayTime.value=g("ect")/1000;f.gain.value=g("ecf")/100;e.gain.value=g("ecm")/100;n.connect(d);d.connect(f);f.connect(d);d.connect(e);e.connect(ms)}
+ if(g("rvm")>0){const cvn=o.createConvolver(),L=Math.floor(g("rvs")*sr),ib=o.createBuffer(2,L,sr);for(let c=0;c<2;c++){const a=ib.getChannelData(c);for(let i=0;i<L;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/L,2.5)}cvn.buffer=ib;const rg=o.createGain();rg.gain.value=g("rvm")/100;n.connect(cvn);cvn.connect(rg);rg.connect(ms)}
+ if(music){const m=o.createBufferSource(),mg=o.createGain();m.buffer=music;m.loop=true;mg.gain.value=g("mus")/100;m.connect(mg);mg.connect(ms);m.start(0)}
+ const M=g("mas")/100,fi=g("fi"),fo=g("fo");
+ ms.gain.setValueAtTime(fi>0?0:M,0);if(fi>0)ms.gain.linearRampToValueAtTime(M,fi);
+ if(fo>0){ms.gain.setValueAtTime(M,Math.max(fi,tot-fo));ms.gain.linearRampToValueAtTime(0,tot)}
+ s.start(0,off,dur);return o.startRendering();
+}
+function wav(b){const n=b.length,ch=2,d=new DataView(new ArrayBuffer(44+n*4)),w=(p,t)=>[...t].forEach((c,i)=>d.setUint8(p+i,c.charCodeAt(0)));
+ w(0,"RIFF");d.setUint32(4,36+n*4,true);w(8,"WAVEfmt ");d.setUint32(16,16,true);d.setUint16(20,1,true);d.setUint16(22,ch,true);d.setUint32(24,b.sampleRate,true);d.setUint32(28,b.sampleRate*4,true);d.setUint16(32,4,true);d.setUint16(34,16,true);w(36,"data");d.setUint32(40,n*4,true);
+ const L=b.getChannelData(0),R=b.numberOfChannels>1?b.getChannelData(1):L;let p=44;for(let i=0;i<n;i++){for(const a of[L,R]){const v=Math.max(-1,Math.min(1,a[i]));d.setInt16(p,v<0?v*32768:v*32767,true);p+=2}}
+ return new Blob([d],{type:"audio/wav"})}
+function stopPlay(){if(playing){try{playing.stop()}catch(e){}playing=null}}
+async function play(buf){stopPlay();const c=ac(),s=c.createBufferSource();s.buffer=buf;s.connect(c.destination);s.onended=()=>{if(playing===s)playing=null;st("প্লে শেষ")};playing=s;s.start()}
+$("#pv").onclick=async()=>{try{st("মিক্স হচ্ছে...");const b=await render();st("চলছে · "+fmt(b));play(b)}catch(x){st(x.message)}};
+$("#ps").onclick=()=>{stopPlay();st("বন্ধ")};
+
+/* ---- export as phone-playable audio (real-time) ---- */
+async function exportAudio(buf){const c=ac(),dest=c.createMediaStreamDestination();
+ const mt=["audio/mp4","audio/webm;codecs=opus","audio/webm"].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t));if(!mt)throw new Error("এই ব্রাউজারে এক্সপোর্ট চলে না");
+ const rec=new MediaRecorder(dest.stream,{mimeType:mt}),ch=[];rec.ondataavailable=e=>e.data.size&&ch.push(e.data);
+ const done=new Promise(r=>rec.onstop=r),s=c.createBufferSource();s.buffer=buf;s.connect(dest);s.onended=()=>setTimeout(()=>rec.stop(),250);
+ rec.start();s.start();let t=buf.duration;const iv=setInterval(()=>{t-=1;if(t>0)st("এক্সপোর্ট হচ্ছে... আর "+Math.ceil(t)+" সে")},1000);await done;clearInterval(iv);
+ return{blob:new Blob(ch,{type:mt.split(";")[0]}),ext:mt.includes("mp4")?"mp4":"webm"}}
+async function saveFile(buf,name){st("এক্সপোর্ট হচ্ছে...");const{blob,ext}=await exportAudio(buf),fn=(name||"voice-portal")+"."+ext;
+ let d=null;try{d=await claude.use("downloads")}catch(e){}
+ if(d){await d.save({filename:fn,data:blob})}else{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;a.click()}
+ st("ডাউনলোড রেডি: "+fn)}
+$("#dl").onclick=async()=>{try{st("মিক্স হচ্ছে...");const b=await render();await saveFile(b,$("#nm").value.trim())}catch(x){st(x.code=="declined"?"ডাউনলোড বাতিল":x.message||"ডাউনলোড হয়নি")}};
+
+/* ---- share ---- */
+let cache=null;
+const ckey=()=>[...document.querySelectorAll("#ctl input")].map(e=>e.type=="checkbox"?+e.checked:e.value).join(",");
+function dlFile(f){const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
+async function doShare(f){
+ try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:f.name});st("শেয়ার হয়েছে");return}
+  dlFile(f);st("এই ব্রাউজারে সরাসরি শেয়ার চলে না, ফাইল ডাউনলোড হয়েছে। সেটা যেকোনো অ্যাপে পাঠাও")}
+ catch(x){st(x.name=="AbortError"?"শেয়ার বাতিল":x.name=="NotAllowedError"?"ভয়েস রেডি। আবার 'ভয়েস শেয়ার' চাপো":"শেয়ার হয়নি")}}
+$("#sh").onclick=async()=>{try{
+ if(!voice)throw new Error("আগে ভয়েস রেকর্ড করো বা ফাইল দাও");
+ const k=ckey();let b;
+ if(cache&&cache.v===voice&&cache.m===music&&cache.k===k)b=cache.b;else{st("মিক্স হচ্ছে...");b=await render();cache={v:voice,m:music,k,b}}
+ await doShare(new File([wav(b)],($("#nm").value.trim()||"voice-portal")+".wav",{type:"audio/wav"}))}catch(x){st(x.message||"শেয়ার হয়নি")}};
+
+/* ---- saved voices (IndexedDB) ---- */
+const db=()=>new Promise((res,rej)=>{const r=indexedDB.open("voice-portal",1);r.onupgradeneeded=()=>r.result.createObjectStore("v",{keyPath:"id",autoIncrement:true});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const tx=async(m,f)=>{const d=await db();return new Promise((res,rej)=>{const t=d.transaction("v",m),q=f(t.objectStore("v"));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)})};
+const urls=[];
+async function list(){let a=[];try{a=await tx("readonly",s=>s.getAll())}catch(e){$("#ls").innerHTML='<p class="info">সেভ সিস্টেম এখানে চালু নেই</p>';return}
+ urls.splice(0).forEach(URL.revokeObjectURL);a.reverse();
+ $("#ls").innerHTML=a.length?"":'<p class="info">কিছু সেভ করা নেই</p>';
+ a.forEach(v=>{const u=URL.createObjectURL(v.blob);urls.push(u);const d=document.createElement("div");d.className="sv";
+  d.innerHTML=`<b></b><p class="info">${new Date(v.date).toLocaleString()} · ${v.dur}</p><audio controls src="${u}"></audio><button data-d="${v.id}">ডাউনলোড</button><button data-s="${v.id}">ভয়েস শেয়ার</button><button data-x="${v.id}">মুছে ফেলো</button>`;
+  d.querySelector("b").textContent=v.name;d.dataset.n=v.name;$("#ls").appendChild(d)})}
+$("#sv").onclick=async()=>{try{st("মিক্স হচ্ছে...");const b=await render();await tx("readwrite",s=>s.add({name:$("#nm").value.trim()||"ভয়েস "+new Date().toLocaleTimeString(),date:Date.now(),dur:fmt(b),blob:wav(b)}));st("সেভ হয়েছে, নিচের লিস্টে দেখো");list()}catch(x){st(x.message||"সেভ হয়নি")}};
+$("#ls").onclick=async e=>{const t=e.target,i=+(t.dataset.d||t.dataset.x||t.dataset.s);if(!i)return;
+ if(t.dataset.s){try{const v=await tx("readonly",q=>q.get(i));await doShare(new File([v.blob],v.name+".wav",{type:"audio/wav"}))}catch(x){st("শেয়ার হয়নি")}return}
+ if(t.dataset.x){await tx("readwrite",s=>s.delete(i));list();return}
+ try{const v=await tx("readonly",s=>s.get(i)),b=await dec(v.blob);await saveFile(b,v.name)}catch(x){st(x.code=="declined"?"ডাউনলোড বাতিল":"ডাউনলোড হয়নি")}};
+list();
+</script></body></html>
